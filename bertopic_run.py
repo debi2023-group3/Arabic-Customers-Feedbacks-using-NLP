@@ -22,11 +22,11 @@ unlabeled_data = pd.read_csv("data/raw/unlabeled_data.csv")
 
 exp = TopicModeling(args)
 
-train_data, val_data = train_test_split(labeled_data, test_size=0.9, shuffle=True)
+train_data, val_data = train_test_split(labeled_data, test_size=0.2, shuffle=True)
 # train
 exp.fit(train_data)
 torch.cuda.empty_cache()
 # validation
-exp.validation(val_data.sample(20))
+exp.validation(val_data)
 # # test
 # exp.transform(unlabeled_data)

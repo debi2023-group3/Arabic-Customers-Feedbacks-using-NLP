@@ -32,6 +32,10 @@ class TopicModeling(object):
                 self.prep_args.append(key)
         self.prep_args = self.prep_args[:-9]
 
+        with open('./class_mapping.json') as json_file:
+                self.reverse_classes = json.load(json_file)
+
+        self.classes = {v: int(k) for k, v in self.reverse_classes.items()}
 # ================================================================================= #
     def setup(self):
         self.client = MlflowClient()
@@ -39,7 +43,7 @@ class TopicModeling(object):
         experiment_name = "Arabic Clustering Using BERTopic"
         tags = {"language":"Arabic", "technique":"NLP", "model":"BERTopic", "task":"text Clustering"}
 
-        # retraive experiment by its name
+        # Retraive experiment by its name
         experiment = self.client.get_experiment_by_name(experiment_name)
         if experiment is None:
             # Uncomment to create experiment for the first time
@@ -63,7 +67,6 @@ class TopicModeling(object):
         print("Lifecycle_stage: {}".format(experiment.lifecycle_stage))
         print('='*50)
         print()
-
 # ================================================================================= #
     def get_cleaned_data(self, data):
         
@@ -74,10 +77,6 @@ class TopicModeling(object):
         # label encoder for label if exist
         if self.model_config['task'] in ['supervised', 'cls']:
 
-            with open('./class_mapping.json') as json_file:
-                self.reverse_classes = json.load(json_file)
-
-            self.classes = {v: int(k) for k, v in self.reverse_classes.items()}
             self.processed_data[self.data_args['target_col']] = self.processed_data[self.data_args['target_col']].map(self.classes)
             labels = list(self.processed_data[self.data_args['target_col']].values)
             
@@ -85,7 +84,6 @@ class TopicModeling(object):
             labels = None
         
         return reviews, labels
-
 # ================================================================================= #
     def fit(self, data):
         
@@ -101,8 +99,8 @@ class TopicModeling(object):
             
         # start tracking the experiment using MLflow
         self.setup()
-        mlflow.start_run(experiment_id=self.experiment_id)
-        self.run_id = mlflow.active_run().info.run_id
+        mlflow.start_run(experiment_id = self.experiment_id)
+        # self.run_id = mlflow.active_run().info.run_id
         mlflow.pytorch.autolog()
         # store hyperparameters in MLflow
         mlflow.log_params(self.model_config)
@@ -152,10 +150,13 @@ class TopicModeling(object):
             print(f'''>> Saving figures in `{self.data_args['visual_dir']}` directory.... ''')
             docs = self.processed_data[self.data_args['text_col']].values
             os.makedirs(self.data_args['visual_dir'], exist_ok=True)
-            classes = [self.reverse_classes.get(str(label)) for label in self.labels]
+            try:
+                classes = [self.reverse_classes.get(str(label)) for label in self.labels]
+            except TypeError:
+                classes=None
             self.model.visualize_topics(docs, self.data_args['visual_dir'], self.topics, classes)
             
-        mlflow.end_run()
+        # mlflow.end_run()
         
         return self.processed_data
 # ================================================================================= #
@@ -170,7 +171,7 @@ class TopicModeling(object):
         result['Label'] = labels
         result['Topic'] = topics
         
-        mlflow.start_run(run_id=self.run_id, nested=True)
+        mlflow.start_run(experiment_id = self.experiment_id, nested=True)
 
         performance = evaluate_classifier(labels, topics, self.classes)
         del performance['confusion_matrix']

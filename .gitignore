@@ -21,7 +21,7 @@ instance/
 
 # Jupyter Notebook
 .ipynb_checkpoints
-data_factory/.ipynb_checkpoints
+*/.ipynb_checkpoints
 # Environments
 env/
 python=3.9/

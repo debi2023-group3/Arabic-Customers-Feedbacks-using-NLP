@@ -60,14 +60,14 @@ class BERTopicModel(nn.Module):
         self.corpus_embeddings = self._Embedding(docs)
         topics, probs = self.model.fit_transform(docs, self.corpus_embeddings, y=labels)
         
-        if self.configs['task'] == 'guided':
-            self.model.update_topics(docs, 
-                        seed_topic_list=[
-                            ["ممكن", "ياريت", "لكن","اتمنى", "تعديل", "ينقص","خدمة","ارجو","تفعيل","اضافة", "يحتاج", "تنظيم"], # suggession
-                            ["جميل", "ممتاز","سهل", "رائع", "جيد", "محترم", "مفيد", "كويس","شكرا"], # positive
-                            ["زفت", "سيئ", "خرا", "بطئ","حرامي", "نصب","سئ", "زباله", "فشل"],# negative
-                            ["شحن", "حساب", "رصيد", "فواتير", "خدمة", "فيزا", "مشكلة", "سحب", "رفض", "تكلفه", "خصم"], #issue
-                            ["لماذا", "ماهي", "ليه", "هل", "كيفية", "عايز", "كيف", "اريد", "ازاي", "استفسار", "?"],] )#Quesion)
+        # if self.configs['task'] == 'guided':
+        #     self.model.update_topics(docs, 
+        #                 seed_topics=[
+        #                     ["ممكن", "ياريت", "لكن","اتمنى", "تعديل", "ينقص","خدمة","ارجو","تفعيل","اضافة", "يحتاج", "تنظيم"], # suggession
+        #                     ["جميل", "ممتاز","سهل", "رائع", "جيد", "محترم", "مفيد", "كويس","شكرا"], # positive
+        #                     ["زفت", "سيئ", "خرا", "بطئ","حرامي", "نصب","سئ", "زباله", "فشل"],# negative
+        #                     ["شحن", "حساب", "رصيد", "فواتير", "خدمة", "فيزا", "مشكلة", "سحب", "رفض", "تكلفه", "خصم"], #issue
+        #                     ["لماذا", "ماهي", "ليه", "هل", "كيفية", "عايز", "كيف", "اريد", "ازاي", "استفسار", "?"],] )#Quesion)
 
         return topics, probs
     
@@ -195,16 +195,7 @@ class BERTopicModel(nn.Module):
             return BaseDimensionalityReduction()
         
     def _Clustering(self):
-        """
-        Initialize and return a clustering model based on the specified technique.
 
-        Args:
-            model_name (str): Model name for clustering.
-            max_iter (int): Maximum number of iterations (used for KMeans).
-
-        Returns:
-            KMeans or HDBSCAN or AgglomerativeClustering or SpectralClustering: Initialized clustering model.
-        """
         if self.configs['clustering_model_name'] == 'kmeans':
             return KMeans(n_init='auto', init='k-means++', max_iter=10, 
                             n_clusters=self.configs['n_topics'], random_state=SEED)

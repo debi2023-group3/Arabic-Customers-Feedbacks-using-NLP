@@ -1,0 +1,42 @@
+{
+  "data_args": {
+      "normalize": true,
+      "remove_stopwords": false,
+      "remove_english": true,
+      "remove_punct": true,
+      "remove_repeated_chars": true,
+      "remove_repeated_words": true,
+      "remove_long_words": false,
+      "remove_url_email": true,
+      "remove_emojis": true,
+      "map_emojis": false,
+      "translate_english": false,
+      "check_spelling": false,
+      "stem": false,
+      "segment": false,
+      "use_gpu": true,
+      "text_col": "Review Text",
+      "target_col": "Label",
+      "results_dir": "results",
+      "visual_dir": "figures",
+      "save_annotation": "data/processed",
+      "save_data_file": "data/processed",
+      "checkpoints_dir": "checkpoints/BERTopic"
+  },
+  "model_config": {
+      "task": "cls",
+      "n_topics": 5,
+      "min_topic_size": 50,
+      "candidate_topics": ["positive", "negative", "issue", "suggestion", "question"],
+      "embd_technique": "sent",
+      "max_length": 30,
+      "embed_model_name": "paraphrase-MiniLM-L6-v2",
+      "dim_model_name": "pca",
+      "n_components": 5,
+      "clustering_model_name": "lr",
+      "representation_model_list": ["keyBERT", "mmr", "zeroshot"],
+      "ngram_range": [1, 3],
+      "diversity": 0.3,
+      "zero_shot_model_name": "aubmindlab/bert-base-arabertv01"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "data_args": {
+    "normalize": true,
+    "remove_stopwords": false,
+    "remove_english": true,
+    "remove_punct": true,
+    "remove_repeated_chars": true,
+    "remove_repeated_words": true,
+    "remove_long_words": false,
+    "remove_url_email": true,
+    "remove_emojis": false,
+    "map_emojis": false,
+    "translate_english":false,
+    "check_spelling": false,
+    "stem": false,
+    "segment": false,
+    "save_data_file": "data/processed",
+    "train_data_path": "data/raw/labeled_data.csv",
+    "test_data_path": "data/raw/unlabeled_data.csv",
+    "text_col": "Review Text",
+    "target_col": "Label"
+  },
+  "model_config": {
+    "bert_name": "aubmindlab/bert-base-arabertv01",
+    "max_len": 30,
+    "n_nodes": 5,
+    "n_layers": 2,
+    "n_classes": 3,
+    "lr": 2e-5,
+    "batch_size": 8,
+    "epochs": 2
+  }
+}

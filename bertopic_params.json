@@ -1,17 +1,17 @@
 {
   "data_args": {
       "normalize": true,
-      "remove_stopwords": false,
+      "remove_stopwords": true,
       "remove_english": true,
       "remove_punct": true,
       "remove_repeated_chars": true,
       "remove_repeated_words": true,
       "remove_long_words": false,
       "remove_url_email": true,
-      "remove_emojis": true,
-      "map_emojis": false,
+      "remove_emojis": false,
+      "map_emojis": true,
       "translate_english": false,
-      "check_spelling": false,
+      "check_spelling": true,
       "stem": false,
       "segment": false,
       "use_gpu": true,
@@ -24,7 +24,7 @@
       "checkpoints_dir": "checkpoints/BERTopic"
   },
   "model_config": {
-      "task": "cls", 
+      "task": "unsupervised", 
       "n_topics": 5,
       "min_topic_size": 50,
       "candidate_topics": ["positive", "negative", "issue", "suggestion", "question"],

@@ -82,7 +82,7 @@ class BERTopicModel(nn.Module):
     
     def save(self, checkpoints_dir):
         
-        setting = f"{self.configs['embd_technique']}_embed_{self.configs['n_topics']}topics_{self.configs['n_components']}dim_{self.configs['clustering_model_name']}"
+        setting = f"{self.configs['task']}_{self.configs['embd_technique']}_embed_{self.configs['n_topics']}topics_{self.configs['n_components']}dim_{self.configs['clustering_model_name']}"
         full_path = os.path.join(checkpoints_dir, setting)
         self.model.save(full_path, serialization="pickle")
         #save(full_path , serialization="pytorch", save_ctfidf=True)
@@ -249,7 +249,9 @@ class BERTopicModel(nn.Module):
         arabic_stopwords.append('اي')
         arabic_stopwords.append('ليه')
         arabic_stopwords.append('شركه')
-        
+        arabic_stopwords.append('او')
+        arabic_stopwords.append('فوري')
+
         return arabic_stopwords
 
     def _Representation(self):

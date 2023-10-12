@@ -15,8 +15,6 @@
     "stem": false,
     "segment": false,
     "save_data_file": "data/processed",
-    "train_data_path": "data/raw/labeled_data.csv",
-    "test_data_path": "data/raw/unlabeled_data.csv",
     "text_col": "Review Text",
     "target_col": "Label"
   },

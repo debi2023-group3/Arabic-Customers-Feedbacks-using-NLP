@@ -1,12 +1,17 @@
 # Importing Libraries
 
 import re
+import json
 import os
 import string
 import logging
 import pandas as pd
+import arabicstopwords.arabicstopwords as stp
 from googletrans import Translator
- 
+from spellchecker import SpellChecker
+from farasa.segmenter import FarasaSegmenter
+from farasa.stemmer import FarasaStemmer
+
 SEED = 2023
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -91,18 +96,17 @@ class TextPreprocessor(object):
         return text.strip()
     # ================================================================================= #
     def remove_stopwords(self, text):
-        import arabicstopwords.arabicstopwords as stp
-
+    
         arabic_stopwords = stp.stopwords_list()
         arabic_stopwords.remove('لا')
-        arabic_stopwords.extend(['و','ليه','شركه','اي','تطبيقات','جد','تطبيق', 'برامج','ابلكيشن', 'برنامج', 'الي', 'ال'])
+        arabic_stopwords.extend(['و', 'ليه','شركه','اي','تطبيقات','جد','تطبيق', 'برامج','ابلكيشن', 'برنامج', 'الي', 'ال'])
         tokens = text.split(" ")
         text = ' '.join([w for w in tokens if w not in arabic_stopwords])
 
         return text
     # ================================================================================= #
     def map_emojis(self, text):
-        import json
+        
         with open('./emojis_map.json', 'r') as f:
             emojis_map = json.load(f)
             logger.debug("Emojis mapper is loaded ...")
@@ -170,21 +174,18 @@ class TextPreprocessor(object):
    # ================================================================================= #
     def stem_text(self, text):
         """ Stem each token in a text """
-        from farasa.stemmer import FarasaStemmer
         stemmer = FarasaStemmer(interactive = True)
         text = stemmer.stem(text)
         return text  
     # ================================================================================= #
     def segment_text(self, text):
         """ Stem each token in a text """
-        from farasa.stemmer import FarasaSegmenter
         stemmer = FarasaSegmenter(interactive = True)
-        text = stemmer.segment(s)
+        text = stemmer.segment(text)
         return text  
    
     # ================================================================================= #   
     def check_spelling(self, text):
-        from spellchecker import SpellChecker
         checker = SpellChecker(language='ar')
         tokens = text.split(" ")
         
@@ -234,12 +235,12 @@ class TextPreprocessor(object):
         # 1. cleaning nulls and duplication
         self.check_quality(verbose=True)
         # 2. translate English samples
-        print(">> Translating English Samples ...")
         if self.args['translate_english']:
+            print(">> Translating English Samples ...")
             self.translate_english()
         # 3. Apply text preprocessing for NLP task
         print(">> Apply text preprocessing for NLP task ...")
-        self.data.loc[self.args['text_col']] = self.data[self.args['text_col']].apply(self.preprocess_text)
+        self.data[self.args['text_col']] = self.data[self.args['text_col']].apply(self.preprocess_text)
         # 4. Check nulls and duplication after preprocessing 
         self.check_quality(verbose=True)
         # 5. save the cleaned and prepared file

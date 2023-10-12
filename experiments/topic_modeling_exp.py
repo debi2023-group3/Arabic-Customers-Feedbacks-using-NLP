@@ -136,7 +136,7 @@ class TopicModeling(object):
             os.makedirs(self.data_args['checkpoints_dir'], exist_ok=True)
             model_path = self.model.save(self.data_args['checkpoints_dir'])
             signature = infer_signature(np.array(self.reviews), np.array(self.topics))
-            mlflow.pytorch.log_model(self.model, 'model', registered_model_name= model_path.split('/')[-1], signature=signature)
+            mlflow.pytorch.log_model(self.model, 'BERTopic model', registered_model_name= model_path.split('/')[-1], signature=signature)
             
         if self.data_args['results_dir'] is not None:
 
@@ -172,11 +172,11 @@ class TopicModeling(object):
         result['Topic'] = topics
         
         mlflow.start_run(experiment_id = self.experiment_id, nested=True)
-
-        performance = evaluate_classifier(labels, topics, self.classes)
-        del performance['confusion_matrix']
-        del performance['classification_report']
-        mlflow.log_metrics(performance)
+        if self.model_config['task'] in ['supervised', 'cls']:
+            performance = evaluate_classifier(labels, topics, self.classes)
+            del performance['confusion_matrix']
+            del performance['classification_report']
+            mlflow.log_metrics(performance)
 
         # if self.data_args['visual_dir'] is not None:
         #     os.makedirs(f"{self.data_args['visual_dir']}/validation", exist_ok=True)

@@ -18,15 +18,15 @@ with open('./bertopic_params.json', 'r') as config_file:
     logger.debug("File Parameters loaded successfully")
 
 labeled_data = pd.read_csv("data/raw/labeled_data.csv")    
-unlabeled_data = pd.read_csv("data/raw/unlabeled_data.csv")    
+unlabeled_data = pd.read_csv("data/raw/all-unlabeled-data.csv") #   data/raw/unlabeled_data.csv
 
 exp = TopicModeling(args)
 
-train_data, val_data = train_test_split(labeled_data, test_size=0.2, shuffle=True)
+train_data, val_data = train_test_split(unlabeled_data, test_size=0.2, shuffle=True)
 # train
 exp.fit(train_data)
 torch.cuda.empty_cache()
 # validation
-exp.validation(val_data)
+#exp.validation(val_data)
 # # test
 # exp.transform(unlabeled_data)

@@ -18,9 +18,10 @@ with open('./classifier_params.json', 'r') as config_file:
     args = json.load(config_file)
     logger.debug("File Parameters loaded successfully")
 
+
 exp = Classification(args)
-train_data = pd.read_csv(args['data_args']['train_data_path'])
-test_data = pd.read_csv(args['data_args']['test_data_path'])
+train_data = pd.read_csv("data/raw/labeled_data.csv")
+test_data = pd.read_csv("data/raw/unlabeled_data.csv")
 
 train_data, eval_data = train_test_split(train_data, test_size=0.1, shuffle=True)
 

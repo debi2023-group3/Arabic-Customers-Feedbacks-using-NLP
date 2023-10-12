@@ -1,5 +1,5 @@
 # file tracked by DVC
-/data
+/data/raw
 /checkpoints
 /mlruns
 /figures
